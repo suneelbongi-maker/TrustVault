@@ -9,3 +9,4 @@ python-dotenv
 Flask-Limiter
 pytest
 gunicorn
+cryptography
