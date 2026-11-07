@@ -1,0 +1,82 @@
+
+{% extends "base.html" %}
+
+{% block title %}Sign In | TrustVault{% endblock %}
+
+{% block content %}
+
+<div class="login-wrapper">
+
+    <div class="login-card">
+
+        <div class="login-logo">
+            <span class="login-logo-icon">T</span>
+        </div>
+
+        <span class="eyebrow">WELCOME BACK</span>
+
+        <h1>Access Your Vault</h1>
+
+        <p class="login-description">
+            Sign in to access your secure documents
+            and protected workspace.
+        </p>
+
+        <div class="login-divider"></div>
+
+        <form method="POST" action="{{ url_for('auth.login') }}">
+
+            {{ form.hidden_tag() }}
+
+            <label for="email">Email Address</label>
+
+            {{ form.email(
+                id="email",
+                class="input",
+                placeholder="Enter your email address",
+                autocomplete="email"
+            ) }}
+
+            {% for error in form.email.errors %}
+                <small class="error">{{ error }}</small>
+            {% endfor %}
+
+            <label for="password">Password</label>
+
+            {{ form.password(
+                id="password",
+                class="input",
+                placeholder="Enter your password",
+                autocomplete="current-password"
+            ) }}
+
+            {% for error in form.password.errors %}
+                <small class="error">{{ error }}</small>
+            {% endfor %}
+
+            <label class="remember">
+                {{ form.remember_me() }}
+                Remember me
+            </label>
+
+            {{ form.submit(
+                class="btn login-submit",
+                value="Sign In to TrustVault"
+            ) }}
+
+        </form>
+
+        <div class="login-security">
+            <span class="status-dot"></span>
+            Your connection is protected
+        </div>
+
+    </div>
+
+    <p class="login-footer">
+        TRUSTVAULT · SECURE DOCUMENT MANAGEMENT
+    </p>
+
+</div>
+
+{% endblock %}

@@ -1,0 +1,57 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>{% block title %}TrustVault | Secure Documents{% endblock %}</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+
+    <header class="navbar">
+        <a href="{{ url_for('dashboard') if current_user.is_authenticated else url_for('auth.login') }}"
+           class="brand">
+            <span class="brand-icon">T</span>
+            <span>TRUST<span class="gold-text">VAULT</span></span>
+        </a>
+
+        <span class="navbar-tagline">
+            SECURE DOCUMENT MANAGEMENT
+        </span>
+
+        {% if current_user.is_authenticated %}
+        <nav class="nav-links">
+            <a href="{{ url_for('dashboard') }}">Dashboard</a>
+            <a href="{{ url_for('documents.document_list') }}">Documents</a>
+        </nav>
+        {% endif %}
+    </header>
+
+    <main class="container">
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% for category, message in messages %}
+                <div class="message {{ category }}">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endwith %}
+
+        {% block content %}{% endblock %}
+
+    </main>
+
+    <footer class="footer">
+        <p>
+            &copy; 2026 TrustVault.
+            Secure your files. Protect your privacy.
+        </p>
+    </footer>
+
+</body>
+</html>

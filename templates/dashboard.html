@@ -1,0 +1,149 @@
+```html
+{% extends "base.html" %}
+
+{% block title %}Dashboard | TrustVault{% endblock %}
+
+{% block content %}
+
+<div class="dashboard">
+
+    <!-- Dashboard Header -->
+    <div class="dashboard-header">
+        <div>
+            <span class="eyebrow">YOUR SECURE WORKSPACE</span>
+            <h1>Welcome to TrustVault</h1>
+            <p class="welcome-text">
+                Hello, {{ user.name }}. Your documents are protected.
+            </p>
+        </div>
+
+        <div class="security-badge">
+            <span class="status-dot"></span>
+            Secure Session
+        </div>
+    </div>
+
+    <div class="dashboard-divider"></div>
+
+    <!-- Account Overview -->
+    <div class="section-heading">
+        <span class="gold-line"></span>
+        <h2>Account Overview</h2>
+    </div>
+
+    <section class="profile-card account-card">
+
+        <div class="avatar">
+            {{ user.name[0]|upper }}
+        </div>
+
+        <div class="account-details">
+            <h3>{{ user.name }}</h3>
+            <p>{{ user.email }}</p>
+
+            <span class="role-badge">
+                {{ user.role|capitalize }}
+            </span>
+        </div>
+
+        <div class="account-info">
+
+            <div class="info-item">
+                <span>ACCOUNT TYPE</span>
+                <strong>{{ user.role|upper }}</strong>
+            </div>
+
+            <div class="info-item">
+                <span>ACCOUNT STATUS</span>
+                <strong class="active-status">Active</strong>
+            </div>
+
+        </div>
+
+    </section>
+
+    <!-- Workspace -->
+    <div class="section-heading">
+        <span class="gold-line"></span>
+        <h2>Your Workspace</h2>
+    </div>
+
+    {% if user.role == "admin" %}
+
+    <section class="role-card">
+        <div class="role-icon">♛</div>
+
+        <div>
+            <h3>Administrator Access</h3>
+            <p>
+                Manage documents and monitor system activity.
+                You have administrator privileges.
+            </p>
+        </div>
+    </section>
+
+    {% elif user.role == "owner" %}
+
+    <section class="role-card">
+        <div class="role-icon">◆</div>
+
+        <div>
+            <h3>Document Owner</h3>
+            <p>
+                Upload, organize and manage your secure documents.
+            </p>
+        </div>
+    </section>
+
+    {% else %}
+
+    <section class="role-card">
+        <div class="role-icon">◈</div>
+
+        <div>
+            <h3>Document Viewer</h3>
+            <p>
+                Access and download documents shared with you.
+            </p>
+        </div>
+    </section>
+
+    {% endif %}
+
+    <!-- Document Center -->
+    <div class="action-card">
+
+        <div>
+            <span class="eyebrow">DOCUMENT CENTER</span>
+            <h2>Your Documents</h2>
+            <p>
+                Access your secure document management workspace.
+            </p>
+        </div>
+
+        <a href="{{ url_for('documents.document_list') }}"
+           class="btn document-btn">
+            Manage Documents <span>→</span>
+        </a>
+
+    </div>
+
+    <!-- Single Logout Button -->
+    <form method="POST"
+          action="{{ url_for('auth.logout') }}"
+          class="logout-form">
+
+        <input type="hidden"
+               name="csrf_token"
+               value="{{ csrf_token() }}">
+
+        <button type="submit" class="logout-btn">
+            Logout
+        </button>
+
+    </form>
+
+</div>
+
+{% endblock %}
+```

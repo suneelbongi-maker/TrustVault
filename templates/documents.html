@@ -1,0 +1,201 @@
+
+{% extends "base.html" %}
+
+{% block title %}Documents | TrustVault{% endblock %}
+
+{% block content %}
+
+<div class="dashboard document-dashboard">
+
+    <div class="dashboard-header">
+        <div>
+            <span class="eyebrow">SECURE FILE STORAGE</span>
+            <h1>Document Management</h1>
+            <p class="welcome-text">
+                Welcome, {{ user.name }}. Manage your secure files here.
+            </p>
+        </div>
+
+        <div class="security-badge">
+            <span class="status-dot"></span>
+            Protected Storage
+        </div>
+    </div>
+
+    <div class="dashboard-divider"></div>
+
+    {% if user.role in ["admin", "owner"] %}
+
+    <section class="profile-card upload-card">
+
+        <div class="section-heading">
+            <span class="gold-line"></span>
+            <h2>Upload New Document</h2>
+        </div>
+
+        <p class="section-description">
+            Add a document to your secure TrustVault storage.
+        </p>
+
+        <form method="POST"
+              action="{{ url_for('documents.upload_document') }}"
+              enctype="multipart/form-data">
+
+            <input type="hidden"
+                   name="csrf_token"
+                   value="{{ csrf_token() }}">
+
+            <label for="title">Document Title</label>
+
+            <input class="input"
+                   id="title"
+                   type="text"
+                   name="title"
+                   maxlength="255"
+                   placeholder="Enter document title"
+                   required>
+
+            <label for="category_id">Select Category</label>
+
+            <select class="input"
+                    id="category_id"
+                    name="category_id">
+
+                <option value="">No Category</option>
+
+                {% for category in categories %}
+                <option value="{{ category.id }}">
+                    {{ category.name }}
+                </option>
+                {% endfor %}
+
+            </select>
+
+            <label for="file">Choose Document</label>
+
+            <input class="input"
+                   id="file"
+                   type="file"
+                   name="file"
+                   accept=".pdf,.docx,.txt,.png,.jpg,.jpeg"
+                   required>
+
+            <p class="file-hint">
+                Accepted formats: PDF, DOCX, TXT, PNG, JPG and JPEG.
+                Maximum file size: 10 MB.
+            </p>
+
+            <button class="btn upload-submit" type="submit">
+                ↑ Upload Document
+            </button>
+
+        </form>
+
+    </section>
+
+    {% else %}
+
+    <section class="role-card">
+        <div class="role-icon">◈</div>
+        <div>
+            <h3>Viewer Access</h3>
+            <p>
+                You can view and download shared documents.
+                Upload permissions are not available for your account.
+            </p>
+        </div>
+    </section>
+
+    {% endif %}
+
+    <section class="profile-card available-documents">
+
+        <div class="section-heading">
+            <span class="gold-line"></span>
+            <h2>Available Documents</h2>
+        </div>
+
+        <p class="section-description">
+            Your accessible documents are listed below.
+        </p>
+
+        {% if documents %}
+
+        <div class="table-wrapper">
+
+            <table class="document-table">
+
+                <thead>
+                    <tr>
+                        <th>Document Title</th>
+                        <th>Filename</th>
+                        <th>Category</th>
+                        <th>Size</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+
+                    {% for document in documents %}
+
+                    <tr>
+                        <td>
+                            <span class="file-icon">▤</span>
+                            {{ document.title }}
+                        </td>
+
+                        <td>{{ document.original_filename }}</td>
+
+                        <td>
+                            {% if document.category %}
+                                {{ document.category.name }}
+                            {% else %}
+                                Other
+                            {% endif %}
+                        </td>
+
+                        <td>
+                            {{ "%.2f"|format(document.size_bytes / 1024) }} KB
+                        </td>
+
+                        <td>
+                            <a class="download-link"
+                               href="{{ url_for(
+                                   'documents.download_document',
+                                   document_id=document.id
+                               ) }}">
+                                ↓ Download
+                            </a>
+                        </td>
+                    </tr>
+
+                    {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+        {% else %}
+
+        <div class="empty-state">
+            <div class="empty-icon">▤</div>
+            <h3>No Documents Yet</h3>
+            <p>
+                Your available documents will appear here.
+            </p>
+        </div>
+
+        {% endif %}
+
+    </section>
+
+    <a href="{{ url_for('dashboard') }}" class="back-link">
+        ← Back to Dashboard
+    </a>
+
+</div>
+
+{% endblock %}
