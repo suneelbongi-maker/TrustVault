@@ -1,2 +1,5 @@
 gunicorn
 python-dotenv
+Flask
+pymysql
+cryptography
